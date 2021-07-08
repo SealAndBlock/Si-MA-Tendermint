@@ -15,6 +15,18 @@
         </repository>
     </distributionManagement>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Sonar -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../target/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.language>java</sonar.language>
+        <sonar.projectKey>SealAndBlockGitLabAdmin_sima-tendermint_AXqF5I8Wk-Dzw_D89u2f</sonar.projectKey>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+    </properties>
+
     <groupId>sima</groupId>
     <artifactId>tendermint</artifactId>
     <version>0.0.1-SNAPSHOT</version>
