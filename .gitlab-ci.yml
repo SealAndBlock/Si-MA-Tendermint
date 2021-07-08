@@ -51,4 +51,4 @@ deploy:
     - mvn deploy clean -Dmaven.test.skip=true
   only:
     - master
-    - merge_requests
+    - tags
