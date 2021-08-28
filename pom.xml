@@ -7,25 +7,25 @@
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshot/</url>
+            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-release/</url>
+            <url>https://sealandblock.fr:8443/repository/Si-MA-releases/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>si-ma-snapshots</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshot/</url>
+            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
         </repository>
         <repository>
             <id>si-ma-releases</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-release/</url>
+            <url>https://sealandblock.fr:8443/repository/Si-MA-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
