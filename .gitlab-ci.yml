@@ -6,13 +6,6 @@ stages:
   - test
   - deploy-artifact
 
-cache:
-  - key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .m2/repository
-      - $CI_PROJECT_DIR
-      - .sonar/cache
-
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml"
   GIT_DEPTH: 0

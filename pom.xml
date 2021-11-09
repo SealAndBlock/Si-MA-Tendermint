@@ -7,25 +7,25 @@
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshots/</url>
+            <url>https://nexus.sealandblock.fr/repository/Si-MA-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-releases/</url>
+            <url>https://nexus.sealandblock.fr/repository/Si-MA-releases/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>si-ma-snapshots</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-snapshots/</url>
+            <url>https://nexus.sealandblock.fr/repository/Si-MA-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
         </repository>
         <repository>
             <id>si-ma-releases</id>
-            <url>https://sealandblock.fr:8443/repository/Si-MA-releases/</url>
+            <url>https://nexus.sealandblock.fr/repository/Si-MA-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -41,7 +41,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../target/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
-        <sonar.projectKey>SealAndBlockGitLabAdmin_sima-tendermint_AXqF5I8Wk-Dzw_D89u2f</sonar.projectKey>
+        <sonar.projectKey>SealAndBlockGitLabAdmin_si-ma-tendermint_AXzq8lqS9LgPA-pvqYLy</sonar.projectKey>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     </properties>
 
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>sima</groupId>
             <artifactId>core</artifactId>
-            <version>1.5.12-SNAPSHOT</version>
+            <version>1.5.16-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
