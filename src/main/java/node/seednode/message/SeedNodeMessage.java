@@ -3,6 +3,8 @@ package node.seednode.message;
 import node.message.TendermintMessage;
 import sima.core.protocol.ProtocolIdentifier;
 
+import java.util.Objects;
+
 public abstract class SeedNodeMessage extends TendermintMessage {
 
     // Variables.
@@ -17,6 +19,21 @@ public abstract class SeedNodeMessage extends TendermintMessage {
     protected SeedNodeMessage(String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
         super(null, intendedProtocol);
         this.concernedNodePublicKey = concernedNodePublicKey;
+    }
+
+    // Methods.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SeedNodeMessage that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(concernedNodePublicKey, that.concernedNodePublicKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), concernedNodePublicKey);
     }
 
     // Getters.

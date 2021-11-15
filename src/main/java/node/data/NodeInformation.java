@@ -3,6 +3,7 @@ package node.data;
 import node.NodeType;
 import sima.core.utils.Utils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ import java.util.Objects;
  *     <li><strong>subNodesInformation</strong>: sub nodes information (only for node which are {@link NodeType#SENTRY_NODE})</li>
  * </ul>
  */
-public record NodeInformation(NodeType[] nodeTypes, String nodePublicKey, String ip, SubNodeInformation subNodesInformation) {
+public record NodeInformation(NodeType[] nodeTypes, String nodePublicKey, String ip, SubNodeInformation subNodesInformation) implements Serializable {
 
     // Constructors.
 
