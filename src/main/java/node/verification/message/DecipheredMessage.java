@@ -2,6 +2,7 @@ package node.verification.message;
 
 import sima.core.protocol.ProtocolIdentifier;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class DecipheredMessage extends IdentityProofMessage {
@@ -14,18 +15,33 @@ public class DecipheredMessage extends IdentityProofMessage {
     // Constructors.
 
     /**
-     * @param nodePublicKey    the public key of the node to verify
-     * @param decipheredMsg    the message decipher from ciphered message
-     * @param cipheredMsg      the ciphered message
-     * @param intendedProtocol the intended protocol
+     * @param concernedNodePublicKey the public key of the node to verify
+     * @param decipheredMsg          the message decipher from ciphered message
+     * @param cipheredMsg            the ciphered message
+     * @param intendedProtocol       the intended protocol
      *
      * @throws IllegalArgumentException If decipheredMsg or cipheredMsg is null
      */
-    public DecipheredMessage(String nodePublicKey, String decipheredMsg, String cipheredMsg, ProtocolIdentifier intendedProtocol) {
-        super(nodePublicKey, intendedProtocol);
+    public DecipheredMessage(String concernedNodePublicKey, String decipheredMsg, String cipheredMsg, ProtocolIdentifier intendedProtocol) {
+        super(concernedNodePublicKey, intendedProtocol);
 
         this.decipheredMsg = Optional.ofNullable(decipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null decipheredMsg"));
         this.cipheredMsg = Optional.ofNullable(cipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null cipheredMsg"));
+    }
+
+    // Methods.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DecipheredMessage that)) return false;
+        if (!super.equals(o)) return false;
+        return decipheredMsg.equals(that.decipheredMsg) && cipheredMsg.equals(that.cipheredMsg);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), decipheredMsg, cipheredMsg);
     }
 
     // Getters.

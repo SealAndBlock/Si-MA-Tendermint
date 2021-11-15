@@ -2,6 +2,8 @@ package node.seednode.message.suppression;
 
 import sima.core.protocol.ProtocolIdentifier;
 
+import java.util.Arrays;
+
 public class SuppressionSuccessMessage extends SeedNodeSuppressionMessage {
 
     // Variables.
@@ -18,6 +20,23 @@ public class SuppressionSuccessMessage extends SeedNodeSuppressionMessage {
     public SuppressionSuccessMessage(String concernedNodePublicKey, String[] concernedNodeSubNodePublicKeys, ProtocolIdentifier intendedProtocol) {
         super(concernedNodePublicKey, intendedProtocol);
         this.concernedNodeSubNodePublicKey = concernedNodeSubNodePublicKeys;
+    }
+
+    // Methods.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SuppressionSuccessMessage that)) return false;
+        if (!super.equals(o)) return false;
+        return Arrays.equals(concernedNodeSubNodePublicKey, that.concernedNodeSubNodePublicKey);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Arrays.hashCode(concernedNodeSubNodePublicKey);
+        return result;
     }
 
     // Getters.
