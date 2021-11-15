@@ -1,4 +1,4 @@
-package node;
+package node.message;
 
 import sima.core.protocol.ProtocolIdentifier;
 import sima.standard.environment.message.Message;
