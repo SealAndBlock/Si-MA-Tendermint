@@ -5,7 +5,7 @@ import sima.core.protocol.ProtocolIdentifier;
 
 import java.util.Optional;
 
-import static util.Utils.illegalArgumentExceptionSupplier;
+import static util.Util.illegalArgumentExceptionSupplier;
 
 public abstract class SeedNodeSuppressionMessage extends SeedNodeMessage {
 
