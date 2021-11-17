@@ -1,5 +1,6 @@
 package node.seednode.message.nodelist;
 
+import agent.TendermintAgentIdentifier;
 import node.NodeType;
 import sima.core.protocol.ProtocolIdentifier;
 
@@ -16,8 +17,8 @@ public class GetNodeListMessage extends SeedNodeListNodeMessage {
 
     // Constructors.
 
-    public GetNodeListMessage(NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
-        super(intendedProtocol);
+    public GetNodeListMessage(TendermintAgentIdentifier sender, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
+        super(sender, intendedProtocol);
         this.nodeTypes = Optional.ofNullable(nodeTypes).orElseThrow(illegalArgumentExceptionSupplier("NodeTypes cannot be null"));
     }
 

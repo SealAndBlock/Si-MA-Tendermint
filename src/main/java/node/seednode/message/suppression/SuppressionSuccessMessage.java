@@ -1,5 +1,6 @@
 package node.seednode.message.suppression;
 
+import agent.TendermintAgentIdentifier;
 import sima.core.protocol.ProtocolIdentifier;
 
 import java.util.Arrays;
@@ -13,12 +14,14 @@ public class SuppressionSuccessMessage extends SeedNodeSuppressionMessage {
     // Constructors.
 
     /**
+     * @param sender                         the sender
      * @param concernedNodePublicKey         the public key of the concerned node which has been removed
      * @param concernedNodeSubNodePublicKeys the public keys of each sub node of the concerned node which has been removed
      * @param intendedProtocol               the intended protocol
      */
-    public SuppressionSuccessMessage(String concernedNodePublicKey, String[] concernedNodeSubNodePublicKeys, ProtocolIdentifier intendedProtocol) {
-        super(concernedNodePublicKey, intendedProtocol);
+    public SuppressionSuccessMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String[] concernedNodeSubNodePublicKeys,
+                                     ProtocolIdentifier intendedProtocol) {
+        super(sender, concernedNodePublicKey, intendedProtocol);
         this.concernedNodeSubNodePublicKey = concernedNodeSubNodePublicKeys;
     }
 

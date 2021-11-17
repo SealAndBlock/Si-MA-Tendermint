@@ -1,5 +1,6 @@
 package node.verification.message;
 
+import agent.TendermintAgentIdentifier;
 import node.message.TendermintMessage;
 import sima.core.protocol.ProtocolIdentifier;
 
@@ -7,7 +8,7 @@ public abstract class NodeVerificationMessage extends TendermintMessage {
 
     // Constructors.
 
-    protected NodeVerificationMessage(ProtocolIdentifier intendedProtocol) {
-        super(null, intendedProtocol);
+    protected NodeVerificationMessage(TendermintAgentIdentifier sender, ProtocolIdentifier intendedProtocol) {
+        super(sender, intendedProtocol);
     }
 }

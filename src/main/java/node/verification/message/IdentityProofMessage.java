@@ -1,5 +1,6 @@
 package node.verification.message;
 
+import agent.TendermintAgentIdentifier;
 import sima.core.protocol.ProtocolIdentifier;
 
 import java.util.Objects;
@@ -14,13 +15,14 @@ public abstract class IdentityProofMessage extends NodeVerificationMessage {
     // Constructors.
 
     /**
+     * @param sender                 the sender
      * @param concernedNodePublicKey the public key of the node
      * @param intendedProtocol       the intended protocol
      *
      * @throws IllegalArgumentException if concernedNodePublicKey is null
      */
-    protected IdentityProofMessage(String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(intendedProtocol);
+    protected IdentityProofMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
+        super(sender, intendedProtocol);
 
         this.concernedNodePublicKey =
                 Optional.ofNullable(concernedNodePublicKey).orElseThrow(() -> new IllegalArgumentException("Cannot pass a null publicKey"));
