@@ -8,6 +8,6 @@ public class NodeInscriptionSuccessMessage extends SeedNodeInscriptionMessage {
     // Constructors.
 
     public NodeInscriptionSuccessMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+        super(sender, concernedNodePublicKey, intendedProtocol, null);
     }
 }

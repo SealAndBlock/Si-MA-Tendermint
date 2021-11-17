@@ -23,7 +23,7 @@ public class CipheredMessage extends IdentityProofMessage {
      * @throws IllegalArgumentException if the cipheredMsg is null
      */
     public CipheredMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String cipheredMsg, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+        super(sender, concernedNodePublicKey, intendedProtocol, null);
 
         this.cipheredMsg = Optional.ofNullable(cipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null cipheredMsg"));
     }

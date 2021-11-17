@@ -1,10 +1,10 @@
 package node.seednode.message.inscription;
 
 import agent.TendermintAgentIdentifier;
-import node.NodeType;
+import node.data.NodeInformation;
 import sima.core.protocol.ProtocolIdentifier;
 
-import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 import static util.Util.illegalArgumentExceptionSupplier;
@@ -16,15 +16,16 @@ public class NodeInscriptionMessage extends SeedNodeInscriptionMessage {
     /**
      * All node types that the node is.
      */
-    private final NodeType[] nodeTypes;
+    private final NodeInformation nodeInformation;
 
     // Constructors.
 
-    public NodeInscriptionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
-        this.nodeTypes = Optional.ofNullable(nodeTypes).orElseThrow(illegalArgumentExceptionSupplier("NodeTypes cannot be null."));
-        if (this.nodeTypes.length <= 0)
-            throw new IllegalArgumentException("NodeTypes must contains at least one node type");
+    public NodeInscriptionMessage(TendermintAgentIdentifier sender, NodeInformation nodeInformation, ProtocolIdentifier intendedProtocol,
+                                  ProtocolIdentifier replyProtocol) {
+        super(sender,
+              Optional.ofNullable(nodeInformation).orElseThrow(illegalArgumentExceptionSupplier("NodeTypes cannot be null.")).nodePublicKey(),
+              intendedProtocol, replyProtocol);
+        this.nodeInformation = nodeInformation;
     }
 
     // Methods.
@@ -34,19 +35,18 @@ public class NodeInscriptionMessage extends SeedNodeInscriptionMessage {
         if (this == o) return true;
         if (!(o instanceof NodeInscriptionMessage that)) return false;
         if (!super.equals(o)) return false;
-        return Arrays.equals(nodeTypes, that.nodeTypes);
+        return nodeInformation.equals(that.nodeInformation);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(nodeTypes);
-        return result;
+        return Objects.hash(super.hashCode(), nodeInformation);
     }
 
     // Getters.
 
-    public NodeType[] getNodeTypes() {
-        return nodeTypes;
+    public NodeInformation getNodeInformation() {
+        return nodeInformation;
     }
+
 }

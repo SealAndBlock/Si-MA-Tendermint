@@ -12,9 +12,10 @@ public abstract class SeedNodeInscriptionMessage extends SeedNodeMessage {
 
     // Constructors.
 
-    protected SeedNodeInscriptionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
+    protected SeedNodeInscriptionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+                                         ProtocolIdentifier replyProtocol) {
         super(sender,
               Optional.ofNullable(concernedNodePublicKey).orElseThrow(illegalArgumentExceptionSupplier("ConcernedNodePublicKey cannot be null.")),
-              intendedProtocol);
+              intendedProtocol, replyProtocol);
     }
 }

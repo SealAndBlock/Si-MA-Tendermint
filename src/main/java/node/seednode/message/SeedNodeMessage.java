@@ -17,8 +17,9 @@ public abstract class SeedNodeMessage extends TendermintMessage {
 
     // Constructors.
 
-    protected SeedNodeMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(sender, intendedProtocol);
+    protected SeedNodeMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+                              ProtocolIdentifier replyProtocol) {
+        super(sender, intendedProtocol, replyProtocol);
         this.concernedNodePublicKey = concernedNodePublicKey;
     }
 

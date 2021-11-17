@@ -12,9 +12,10 @@ public abstract class SeedNodeSuppressionMessage extends SeedNodeMessage {
 
     // Constructors.
 
-    protected SeedNodeSuppressionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
+    protected SeedNodeSuppressionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+                                         ProtocolIdentifier replyProtocol) {
         super(sender,
               Optional.ofNullable(concernedNodePublicKey).orElseThrow(illegalArgumentExceptionSupplier("ConcernedNodePublicKey cannot be null.")),
-              intendedProtocol);
+              intendedProtocol, replyProtocol);
     }
 }

@@ -47,7 +47,7 @@
 
     <groupId>sima</groupId>
     <artifactId>tendermint</artifactId>
-    <version>0.0.65-SNAPSHOT</version>
+    <version>0.0.66-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

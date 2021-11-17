@@ -21,7 +21,7 @@ public class SuppressionSuccessMessage extends SeedNodeSuppressionMessage {
      */
     public SuppressionSuccessMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String[] concernedNodeSubNodePublicKeys,
                                      ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+        super(sender, concernedNodePublicKey, intendedProtocol, null);
         this.concernedNodeSubNodePublicKey = concernedNodeSubNodePublicKeys;
     }
 

@@ -17,8 +17,8 @@ public class GetNodeListMessage extends SeedNodeListNodeMessage {
 
     // Constructors.
 
-    public GetNodeListMessage(TendermintAgentIdentifier sender, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
-        super(sender, intendedProtocol);
+    public GetNodeListMessage(TendermintAgentIdentifier sender, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol, ProtocolIdentifier replyProtocol) {
+        super(sender, intendedProtocol, replyProtocol);
         this.nodeTypes = Optional.ofNullable(nodeTypes).orElseThrow(illegalArgumentExceptionSupplier("NodeTypes cannot be null"));
     }
 

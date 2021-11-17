@@ -7,7 +7,8 @@ public class NodeSuppressionDemandMessage extends SeedNodeSuppressionMessage {
 
     // Constructors.
 
-    public NodeSuppressionDemandMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+    public NodeSuppressionDemandMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+                                        ProtocolIdentifier replyProtocol) {
+        super(sender, concernedNodePublicKey, intendedProtocol, replyProtocol);
     }
 }
