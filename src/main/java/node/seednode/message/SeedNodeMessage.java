@@ -1,5 +1,6 @@
 package node.seednode.message;
 
+import agent.TendermintAgentIdentifier;
 import node.message.TendermintMessage;
 import sima.core.protocol.ProtocolIdentifier;
 
@@ -16,8 +17,8 @@ public abstract class SeedNodeMessage extends TendermintMessage {
 
     // Constructors.
 
-    protected SeedNodeMessage(String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(null, intendedProtocol);
+    protected SeedNodeMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
+        super(sender, intendedProtocol);
         this.concernedNodePublicKey = concernedNodePublicKey;
     }
 

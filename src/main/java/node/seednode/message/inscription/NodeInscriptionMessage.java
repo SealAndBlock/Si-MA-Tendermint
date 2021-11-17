@@ -1,5 +1,6 @@
 package node.seednode.message.inscription;
 
+import agent.TendermintAgentIdentifier;
 import node.NodeType;
 import sima.core.protocol.ProtocolIdentifier;
 
@@ -19,8 +20,8 @@ public class NodeInscriptionMessage extends SeedNodeInscriptionMessage {
 
     // Constructors.
 
-    public NodeInscriptionMessage(String concernedNodePublicKey, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
-        super(concernedNodePublicKey, intendedProtocol);
+    public NodeInscriptionMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, NodeType[] nodeTypes, ProtocolIdentifier intendedProtocol) {
+        super(sender, concernedNodePublicKey, intendedProtocol);
         this.nodeTypes = Optional.ofNullable(nodeTypes).orElseThrow(illegalArgumentExceptionSupplier("NodeTypes cannot be null."));
         if (this.nodeTypes.length <= 0)
             throw new IllegalArgumentException("NodeTypes must contains at least one node type");

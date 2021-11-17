@@ -1,5 +1,6 @@
 package node.seednode.message.nodelist;
 
+import agent.TendermintAgentIdentifier;
 import node.data.NodeInformation;
 import sima.core.protocol.ProtocolIdentifier;
 
@@ -13,8 +14,8 @@ public class NodeListMessage extends SeedNodeListNodeMessage {
 
     // Constructors.
 
-    public NodeListMessage(NodeInformation[] allNodeInformation, ProtocolIdentifier intendedProtocol) {
-        super(intendedProtocol);
+    public NodeListMessage(TendermintAgentIdentifier sender, NodeInformation[] allNodeInformation, ProtocolIdentifier intendedProtocol) {
+        super(sender, intendedProtocol);
         this.allNodeInformation = allNodeInformation;
     }
 

@@ -1,5 +1,6 @@
 package node.verification.message;
 
+import agent.TendermintAgentIdentifier;
 import sima.core.protocol.ProtocolIdentifier;
 
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class DecipheredMessage extends IdentityProofMessage {
     // Constructors.
 
     /**
+     * @param sender                 the sender
      * @param concernedNodePublicKey the public key of the node to verify
      * @param decipheredMsg          the message decipher from ciphered message
      * @param cipheredMsg            the ciphered message
@@ -22,8 +24,9 @@ public class DecipheredMessage extends IdentityProofMessage {
      *
      * @throws IllegalArgumentException If decipheredMsg or cipheredMsg is null
      */
-    public DecipheredMessage(String concernedNodePublicKey, String decipheredMsg, String cipheredMsg, ProtocolIdentifier intendedProtocol) {
-        super(concernedNodePublicKey, intendedProtocol);
+    public DecipheredMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String decipheredMsg, String cipheredMsg,
+                             ProtocolIdentifier intendedProtocol) {
+        super(sender, concernedNodePublicKey, intendedProtocol);
 
         this.decipheredMsg = Optional.ofNullable(decipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null decipheredMsg"));
         this.cipheredMsg = Optional.ofNullable(cipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null cipheredMsg"));
