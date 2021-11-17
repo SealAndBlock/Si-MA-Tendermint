@@ -1,18 +1,14 @@
 package node.verification;
 
-import agent.TendermintAgent;
 import agent.TendermintAgentIdentifier;
-import environment.TendermintEnvironment;
-import node.exception.NoTendermintAgentException;
+import node.TendermintProtocol;
 import node.verification.message.CipheredMessage;
 import node.verification.message.DecipheredMessage;
 import org.jetbrains.annotations.NotNull;
 import sima.core.agent.SimaAgent;
 import sima.core.environment.event.Event;
-import sima.core.protocol.Protocol;
 import sima.core.protocol.ProtocolManipulator;
 import sima.core.simulation.SimaSimulationUtils;
-import sima.standard.transport.MessageTransportProtocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +16,7 @@ import java.util.Map;
 import static sima.core.simulation.SimaSimulation.SimaLog;
 import static util.CipherUtil.*;
 
-public class NodeVerificationProtocol extends Protocol {
+public class NodeVerificationProtocol extends TendermintProtocol {
 
     // Constants.
 
@@ -33,19 +29,10 @@ public class NodeVerificationProtocol extends Protocol {
      */
     private final Map<String, String> mapPubKeyRandomMsg;
 
-    private MessageTransportProtocol messageTransport;
-
-    private TendermintEnvironment tendermintEnvironment;
-
     // Constructors.
 
     public NodeVerificationProtocol(String protocolTag, SimaAgent agentOwner, Map<String, String> args) {
         super(protocolTag, agentOwner, args);
-
-        if (!(agentOwner instanceof TendermintAgent)) {
-            throw new NoTendermintAgentException("AgentOwner must be a TendermintAgent");
-        }
-
         mapPubKeyRandomMsg = new HashMap<>();
     }
 
@@ -112,12 +99,8 @@ public class NodeVerificationProtocol extends Protocol {
             return false;
     }
 
-    private TendermintAgentIdentifier getAgent(String publicKey) {
-        return tendermintEnvironment.getTendermintAgentIdentifier(publicKey);
-    }
-
     private void sendCipheredMessageTo(TendermintAgentIdentifier target, CipheredMessage cipheredMessage) {
-        messageTransport.send(target, cipheredMessage);
+        getMessageTransport().send(target, cipheredMessage);
     }
 
     /**
@@ -200,29 +183,6 @@ public class NodeVerificationProtocol extends Protocol {
     }
 
     private void sendDecipheredMessageTo(TendermintAgentIdentifier target, DecipheredMessage decipheredMessage) {
-        messageTransport.send(target, decipheredMessage);
-    }
-
-    @Override
-    public TendermintAgent getAgentOwner() {
-        return (TendermintAgent) super.getAgentOwner();
-    }
-
-    // Getters and Setters.
-
-    public MessageTransportProtocol getMessageTransport() {
-        return messageTransport;
-    }
-
-    public void setMessageTransport(MessageTransportProtocol messageTransport) {
-        this.messageTransport = messageTransport;
-    }
-
-    public TendermintEnvironment getTendermintEnvironment() {
-        return tendermintEnvironment;
-    }
-
-    public void setTendermintEnvironment(TendermintEnvironment tendermintEnvironment) {
-        this.tendermintEnvironment = tendermintEnvironment;
+        getMessageTransport().send(target, decipheredMessage);
     }
 }

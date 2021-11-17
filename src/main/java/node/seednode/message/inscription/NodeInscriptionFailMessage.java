@@ -8,6 +8,6 @@ public class NodeInscriptionFailMessage extends SeedNodeInscriptionMessage {
     // Constructors.
 
     public NodeInscriptionFailMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+        super(sender, concernedNodePublicKey, intendedProtocol, null);
     }
 }

@@ -26,7 +26,7 @@ public class DecipheredMessage extends IdentityProofMessage {
      */
     public DecipheredMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String decipheredMsg, String cipheredMsg,
                              ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol);
+        super(sender, concernedNodePublicKey, intendedProtocol, null);
 
         this.decipheredMsg = Optional.ofNullable(decipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null decipheredMsg"));
         this.cipheredMsg = Optional.ofNullable(cipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null cipheredMsg"));

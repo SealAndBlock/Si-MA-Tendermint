@@ -21,8 +21,9 @@ public abstract class IdentityProofMessage extends NodeVerificationMessage {
      *
      * @throws IllegalArgumentException if concernedNodePublicKey is null
      */
-    protected IdentityProofMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol) {
-        super(sender, intendedProtocol);
+    protected IdentityProofMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+                                   ProtocolIdentifier replyProtocol) {
+        super(sender, intendedProtocol, replyProtocol);
 
         this.concernedNodePublicKey =
                 Optional.ofNullable(concernedNodePublicKey).orElseThrow(() -> new IllegalArgumentException("Cannot pass a null publicKey"));

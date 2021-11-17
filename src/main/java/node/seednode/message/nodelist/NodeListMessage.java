@@ -15,7 +15,7 @@ public class NodeListMessage extends SeedNodeListNodeMessage {
     // Constructors.
 
     public NodeListMessage(TendermintAgentIdentifier sender, NodeInformation[] allNodeInformation, ProtocolIdentifier intendedProtocol) {
-        super(sender, intendedProtocol);
+        super(sender, intendedProtocol, null);
         this.allNodeInformation = allNodeInformation;
     }
 

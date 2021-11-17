@@ -8,7 +8,7 @@ public abstract class NodeVerificationMessage extends TendermintMessage {
 
     // Constructors.
 
-    protected NodeVerificationMessage(TendermintAgentIdentifier sender, ProtocolIdentifier intendedProtocol) {
-        super(sender, intendedProtocol);
+    protected NodeVerificationMessage(TendermintAgentIdentifier sender, ProtocolIdentifier intendedProtocol, ProtocolIdentifier replyProtocol) {
+        super(sender, intendedProtocol, replyProtocol);
     }
 }

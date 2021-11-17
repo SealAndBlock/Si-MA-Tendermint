@@ -8,7 +8,7 @@ public abstract class SeedNodeListNodeMessage extends SeedNodeMessage {
 
     // Constructors.
 
-    protected SeedNodeListNodeMessage(TendermintAgentIdentifier sender, ProtocolIdentifier intendedProtocol) {
-        super(sender, null, intendedProtocol);
+    protected SeedNodeListNodeMessage(TendermintAgentIdentifier sender, ProtocolIdentifier intendedProtocol, ProtocolIdentifier replyProtocol) {
+        super(sender, null, intendedProtocol, replyProtocol);
     }
 }
