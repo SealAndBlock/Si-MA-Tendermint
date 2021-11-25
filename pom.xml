@@ -47,13 +47,13 @@
 
     <groupId>sima</groupId>
     <artifactId>tendermint</artifactId>
-    <version>0.0.66-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>sima</groupId>
             <artifactId>core</artifactId>
-            <version>1.5.17-SNAPSHOT</version>
+            <version>2.0.001-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->

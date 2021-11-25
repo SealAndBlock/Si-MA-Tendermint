@@ -7,13 +7,16 @@ import node.verification.message.DecipheredMessage;
 import org.jetbrains.annotations.NotNull;
 import sima.core.agent.SimaAgent;
 import sima.core.environment.event.Event;
+import sima.core.exception.ForcedWakeUpException;
 import sima.core.protocol.ProtocolManipulator;
+import sima.core.scheduler.Scheduler;
 import sima.core.simulation.SimaSimulationUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static sima.core.simulation.SimaSimulation.SimaLog;
+import static sima.core.simulation.SimaSimulation.getScheduler;
 import static util.CipherUtil.*;
 
 public class NodeVerificationProtocol extends TendermintProtocol {
@@ -22,6 +25,8 @@ public class NodeVerificationProtocol extends TendermintProtocol {
 
     private static final int RANDOM_TEXT_SIZE = 25;
 
+    private static final long WAITING_TIMEOUT = 100;
+
     // Variables.
 
     /**
@@ -29,11 +34,17 @@ public class NodeVerificationProtocol extends TendermintProtocol {
      */
     private final Map<String, String> mapPubKeyRandomMsg;
 
+    private final Map<TendermintAgentIdentifier, Scheduler.Condition> mapWaitingCondition;
+
+    private final Map<TendermintAgentIdentifier, DecipheredMessage> mapDecipherReceive;
+
     // Constructors.
 
     public NodeVerificationProtocol(String protocolTag, SimaAgent agentOwner, Map<String, String> args) {
         super(protocolTag, agentOwner, args);
         mapPubKeyRandomMsg = new HashMap<>();
+        mapWaitingCondition = new HashMap<>();
+        mapDecipherReceive = new HashMap<>();
     }
 
     // Methods.
@@ -65,7 +76,15 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     }
 
     private void receiveDecipheredMessage(DecipheredMessage decipheredMessage) {
-        // TODO unlock thread waiting until receive a DecipheredMessage
+        TendermintAgentIdentifier sender = decipheredMessage.getSender();
+        String pubKey = decipheredMessage.getConcernedNodePublicKey();
+        if (sender.getPublicKey().equals(pubKey)) {
+            Scheduler.Condition c = mapWaitingCondition.get(sender);
+            mapDecipherReceive.put(sender, decipheredMessage);
+            if (c != null)
+                c.wakeup();
+        } else
+            SimaLog.info("Receive a decipher message from a Node which is not the owner of the public key to verify");
     }
 
     /**
@@ -79,11 +98,11 @@ public class NodeVerificationProtocol extends TendermintProtocol {
         String randomMsg = generateRandomMsgFor(nodePubKey);
         String ciphered = cipherMsg(randomMsg, nodePubKey);
         if (ciphered != null) {
-            TendermintAgentIdentifier agent;
-            if ((agent = getAgent(nodePubKey)) != null) {
-                sendCipheredMessageTo(agent,
+            TendermintAgentIdentifier agentToVerify;
+            if ((agentToVerify = getAgent(nodePubKey)) != null) {
+                sendCipheredMessageTo(agentToVerify,
                                       new CipheredMessage(getAgentOwner().getAgentIdentifier(), nodePubKey, ciphered, getIdentifier()));
-                DecipheredMessage decipheredMessage = waitDecipheredMsgFrom(nodePubKey);
+                DecipheredMessage decipheredMessage = waitDecipheredMsgFrom(agentToVerify);
                 if (decipheredMessage == null)
                     return false;
                 else {
@@ -106,13 +125,21 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     /**
      * Wait until a {@link DecipheredMessage} is received and is for the specified public key
      *
-     * @param publicKey the public key of the sender
+     * @param agentToVerify the agent to verify
      *
      * @return the deciphered message received. If no message is received after a certain timer, returns null.
      */
-    private DecipheredMessage waitDecipheredMsgFrom(String publicKey) {
-        // TODO implement the wait in SiMA-core
-        return null;
+    private DecipheredMessage waitDecipheredMsgFrom(TendermintAgentIdentifier agentToVerify) {
+        Scheduler.Condition c = new Scheduler.Condition();
+        mapWaitingCondition.put(agentToVerify, c);
+        try {
+            getScheduler().scheduleAwait(c, WAITING_TIMEOUT);
+            return mapDecipherReceive.get(agentToVerify);
+        } catch (ForcedWakeUpException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+            SimaLog.error("Exception wake the wait of DecipheredMsg", e);
+            return null;
+        }
     }
 
     /**
@@ -125,9 +152,14 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     private @NotNull String generateRandomMsgFor(String pubKey) {
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = RANDOM_TEXT_SIZE;
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++) {
+        String generated = generateRandomText(leftLimit, rightLimit);
+        mapPubKeyRandomMsg.put(pubKey, generated);
+        return generated;
+    }
+
+    private @NotNull String generateRandomText(int leftLimit, int rightLimit) {
+        StringBuilder buffer = new StringBuilder(RANDOM_TEXT_SIZE);
+        for (int i = 0; i < RANDOM_TEXT_SIZE; i++) {
             int randomLimitedInt = SimaSimulationUtils.randomInt(leftLimit, rightLimit);
             buffer.append((char) randomLimitedInt);
         }
