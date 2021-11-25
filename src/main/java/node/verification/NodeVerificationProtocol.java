@@ -14,6 +14,7 @@ import sima.core.simulation.SimaSimulationUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static sima.core.simulation.SimaSimulation.SimaLog;
 import static sima.core.simulation.SimaSimulation.getScheduler;
@@ -32,7 +33,7 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     /**
      * Map public key with the generated random text to try to verify the node.
      */
-    private final Map<String, String> mapPubKeyRandomMsg;
+    private final Map<TendermintAgentIdentifier, String> mapRandomMsg;
 
     private final Map<TendermintAgentIdentifier, Scheduler.Condition> mapWaitingCondition;
 
@@ -42,7 +43,7 @@ public class NodeVerificationProtocol extends TendermintProtocol {
 
     public NodeVerificationProtocol(String protocolTag, SimaAgent agentOwner, Map<String, String> args) {
         super(protocolTag, agentOwner, args);
-        mapPubKeyRandomMsg = new HashMap<>();
+        mapRandomMsg = new HashMap<>();
         mapWaitingCondition = new HashMap<>();
         mapDecipherReceive = new HashMap<>();
     }
@@ -77,41 +78,40 @@ public class NodeVerificationProtocol extends TendermintProtocol {
 
     private void receiveDecipheredMessage(DecipheredMessage decipheredMessage) {
         TendermintAgentIdentifier sender = decipheredMessage.getSender();
-        String pubKey = decipheredMessage.getConcernedNodePublicKey();
-        if (sender.getPublicKey().equals(pubKey)) {
+        TendermintAgentIdentifier concernedAgent = decipheredMessage.getConcernedAgentIdentifier();
+        if (sender.equals(concernedAgent)) {
             Scheduler.Condition c = mapWaitingCondition.get(sender);
             mapDecipherReceive.put(sender, decipheredMessage);
             if (c != null)
                 c.wakeup();
         } else
-            SimaLog.info("Receive a decipher message from a Node which is not the owner of the public key to verify");
+            SimaLog.info("Receive a decipher message with sender which differs from the concerned agent.");
     }
 
     /**
      * This method start the procedure to try to verify the identity of a node.
      *
-     * @param nodePubKey the public key of the node to verify
+     * @param toVerify the identifier to verify
      *
      * @return true if the identity of the node has been verified, else false.
      */
-    public boolean verifyNodeIdentity(String nodePubKey) {
-        String randomMsg = generateRandomMsgFor(nodePubKey);
-        String ciphered = cipherMsg(randomMsg, nodePubKey);
+    public boolean verifyNodeIdentity(TendermintAgentIdentifier toVerify) {
+        String randomMsg = generateRandomMsgFor(Optional.of(toVerify).get());
+        String ciphered = cipherMsg(randomMsg, toVerify);
         if (ciphered != null) {
-            TendermintAgentIdentifier agentToVerify;
-            if ((agentToVerify = getAgent(nodePubKey)) != null) {
-                sendCipheredMessageTo(agentToVerify,
-                                      new CipheredMessage(getAgentOwner().getAgentIdentifier(), nodePubKey, ciphered, getIdentifier()));
-                DecipheredMessage decipheredMessage = waitDecipheredMsgFrom(agentToVerify);
+            if (getTendermintEnvironment().isEvolving(toVerify)) {
+                sendCipheredMessageTo(toVerify,
+                                      new CipheredMessage(getAgentOwner().getAgentIdentifier(), toVerify, ciphered, getIdentifier()));
+                DecipheredMessage decipheredMessage = waitDecipheredMsgFrom(toVerify);
                 if (decipheredMessage == null)
                     return false;
                 else {
-                    String msgSent = mapPubKeyRandomMsg.get(nodePubKey);
+                    String msgSent = mapRandomMsg.get(toVerify);
                     String deciphered = decipheredMessage.getDecipheredMsg();
                     return msgSent.equals(deciphered);
                 }
             } else {// Agent not in the environment
-                SimaLog.info("Agent with the pubKey " + nodePubKey + " is not in the TendermintEnvironment.");
+                SimaLog.info("Agent with the pubKey " + toVerify + " is not in the TendermintEnvironment.");
                 return false;
             }
         } else // Cipher fail
@@ -143,17 +143,17 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     }
 
     /**
-     * Generate a random msg for the public key and map them in {@link #mapPubKeyRandomMsg}.
+     * Generate a random msg for the public key and map them in {@link #mapRandomMsg}.
      *
-     * @param pubKey the public key for which the random message is generated
+     * @param toVerify the identifier to verify
      *
      * @return random msg, never returns null.
      */
-    private @NotNull String generateRandomMsgFor(String pubKey) {
+    private @NotNull String generateRandomMsgFor(TendermintAgentIdentifier toVerify) {
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
         String generated = generateRandomText(leftLimit, rightLimit);
-        mapPubKeyRandomMsg.put(pubKey, generated);
+        mapRandomMsg.put(toVerify, generated);
         return generated;
     }
 
@@ -169,13 +169,13 @@ public class NodeVerificationProtocol extends TendermintProtocol {
     /**
      * Cipher the message with the pub key
      *
-     * @param msg    the message to cipher
-     * @param pubKey the public key with which the message will be ciphered
+     * @param msg      the message to cipher
+     * @param toVerify the identifier for  which the message will be ciphered
      *
      * @return the ciphered message with the key. If the cipher fail, return null
      */
-    private String cipherMsg(String msg, String pubKey) {
-        return rsaCipher(rsaExtractPublicKey(pubKey), msg);
+    private String cipherMsg(String msg, TendermintAgentIdentifier toVerify) {
+        return rsaCipher(rsaExtractPublicKey(toVerify.getPublicKey()), msg);
     }
 
     /**
@@ -185,17 +185,14 @@ public class NodeVerificationProtocol extends TendermintProtocol {
      */
     private void proveIdentity(CipheredMessage cipheredMessage) {
         String ciphered = cipheredMessage.getCipheredMsg();
-        if (cipheredMessage.getConcernedNodePublicKey().equals(getNodePublicKey())) {
+        TendermintAgentIdentifier sender = cipheredMessage.getSender();
+        if (cipheredMessage.getConcernedAgentIdentifier().equals(getAgentOwner().getAgentIdentifier())) {
             String deciphered = decipherMessage(ciphered, getNodePrivateKey());
-
             if (deciphered != null) {
-                TendermintAgentIdentifier agent;
-                if ((agent = getAgent(cipheredMessage.getConcernedNodePublicKey())) != null)
-                    sendDecipheredMessageTo(agent,
-                                            new DecipheredMessage(getAgentOwner().getAgentIdentifier(), getNodePublicKey(), deciphered, ciphered,
-                                                                  getIdentifier()));
-                else
-                    SimaLog.info("Agent with the public key " + cipheredMessage.getConcernedNodePublicKey() + " is not in the TendermintEnvironment");
+                sendDecipheredMessageTo(sender,
+                                        new DecipheredMessage(getAgentOwner().getAgentIdentifier(), getAgentOwner().getAgentIdentifier(), deciphered,
+                                                              ciphered,
+                                                              getIdentifier()));
             } else // decipher fail -> cannot prove the identity (NEVER HAPPEN?)
                 SimaLog.error("Fail to decipher the message with correct public key. Concerned agent : " + getAgentOwner().getAgentIdentifier());
 

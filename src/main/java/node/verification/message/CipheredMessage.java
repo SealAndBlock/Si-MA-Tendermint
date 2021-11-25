@@ -15,15 +15,16 @@ public class CipheredMessage extends IdentityProofMessage {
     // Constructors.
 
     /**
-     * @param sender                 the sender
-     * @param concernedNodePublicKey the public key of the node to verify
-     * @param cipheredMsg            the cipheredMsg to send
-     * @param intendedProtocol       the intended protocol
+     * @param sender           the sender
+     * @param toVerifyAgent    the identifier of agent to verify
+     * @param cipheredMsg      the cipheredMsg to send
+     * @param intendedProtocol the intended protocol
      *
      * @throws IllegalArgumentException if the cipheredMsg is null
      */
-    public CipheredMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, String cipheredMsg, ProtocolIdentifier intendedProtocol) {
-        super(sender, concernedNodePublicKey, intendedProtocol, null);
+    public CipheredMessage(TendermintAgentIdentifier sender, TendermintAgentIdentifier toVerifyAgent, String cipheredMsg,
+                           ProtocolIdentifier intendedProtocol) {
+        super(sender, toVerifyAgent, intendedProtocol, null);
 
         this.cipheredMsg = Optional.ofNullable(cipheredMsg).orElseThrow(() -> new IllegalArgumentException("Cannot pass null cipheredMsg"));
     }

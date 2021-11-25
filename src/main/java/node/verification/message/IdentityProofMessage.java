@@ -10,23 +10,24 @@ public abstract class IdentityProofMessage extends NodeVerificationMessage {
 
     // Variables.
 
-    private final String concernedNodePublicKey;
+    private final TendermintAgentIdentifier concernedAgentIdentifier;
 
     // Constructors.
 
     /**
-     * @param sender                 the sender
-     * @param concernedNodePublicKey the public key of the node
-     * @param intendedProtocol       the intended protocol
+     * @param sender                   the sender
+     * @param concernedAgentIdentifier the public key of the node
+     * @param intendedProtocol         the intended protocol
      *
      * @throws IllegalArgumentException if concernedNodePublicKey is null
      */
-    protected IdentityProofMessage(TendermintAgentIdentifier sender, String concernedNodePublicKey, ProtocolIdentifier intendedProtocol,
+    protected IdentityProofMessage(TendermintAgentIdentifier sender, TendermintAgentIdentifier concernedAgentIdentifier,
+                                   ProtocolIdentifier intendedProtocol,
                                    ProtocolIdentifier replyProtocol) {
         super(sender, intendedProtocol, replyProtocol);
 
-        this.concernedNodePublicKey =
-                Optional.ofNullable(concernedNodePublicKey).orElseThrow(() -> new IllegalArgumentException("Cannot pass a null publicKey"));
+        this.concernedAgentIdentifier =
+                Optional.ofNullable(concernedAgentIdentifier).orElseThrow(() -> new IllegalArgumentException("Cannot pass a null publicKey"));
     }
 
     // Methods.
@@ -36,17 +37,17 @@ public abstract class IdentityProofMessage extends NodeVerificationMessage {
         if (this == o) return true;
         if (!(o instanceof IdentityProofMessage that)) return false;
         if (!super.equals(o)) return false;
-        return concernedNodePublicKey.equals(that.concernedNodePublicKey);
+        return concernedAgentIdentifier.equals(that.concernedAgentIdentifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), concernedNodePublicKey);
+        return Objects.hash(super.hashCode(), concernedAgentIdentifier);
     }
 
     // Getters.
 
-    public String getConcernedNodePublicKey() {
-        return concernedNodePublicKey;
+    public TendermintAgentIdentifier getConcernedAgentIdentifier() {
+        return concernedAgentIdentifier;
     }
 }
