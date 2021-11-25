@@ -208,18 +208,18 @@ public class SeedNodeProtocol extends TendermintProtocol {
      * @return true if the node has been verified else false.
      */
     private boolean verifyNode(NodeInformation nodeToVerify) {
-        return verifyNode(nodeToVerify.nodePublicKey());
+        return verifyNode(getAgent(nodeToVerify.nodePublicKey()));
     }
 
     /**
      * Verifies if the node which sends messages is really the node which is pretended to be.
      *
-     * @param nodeToVerifyPubKey the public key of the node to verify
+     * @param nodeToVerify the node to verify
      *
      * @return true if the node has been verified else false.
      */
-    private boolean verifyNode(String nodeToVerifyPubKey) {
-        return nodeVerificationProtocol.verifyNodeIdentity(nodeToVerifyPubKey);
+    private boolean verifyNode(TendermintAgentIdentifier nodeToVerify) {
+        return nodeVerificationProtocol.verifyNodeIdentity(nodeToVerify);
     }
 
     /**
@@ -239,13 +239,13 @@ public class SeedNodeProtocol extends TendermintProtocol {
         if (Arrays.asList(nodeInformation.nodeTypes()).contains(NodeType.SENTRY_NODE) && subNodeInformation != null &&
                 subNodeInformation.containsInfo()) {
             for (String validatorToVerifyPubKey : subNodeInformation.validators()) {
-                boolean verified = verifyNode(validatorToVerifyPubKey);
+                boolean verified = verifyNode(getAgent(validatorToVerifyPubKey));
                 if (!verified)
                     return false;
             }
 
             for (String fullNodeToVerifyPubKey : subNodeInformation.fullNodes()) {
-                boolean verified = verifyNode(fullNodeToVerifyPubKey);
+                boolean verified = verifyNode(getAgent(fullNodeToVerifyPubKey));
                 if (!verified)
                     return false;
             }
